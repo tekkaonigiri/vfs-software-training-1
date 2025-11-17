@@ -5,8 +5,6 @@ from std_msgs.msg import Float64MultiArray
 import numpy as np
 import random
 
-
-
 class DroneNode(Node):
     def __init__(self):
         super().__init__('drone_node')
