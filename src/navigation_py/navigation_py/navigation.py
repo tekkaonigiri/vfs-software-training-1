@@ -1,8 +1,9 @@
 import rclpy
 from rclpy.node import Node
-from navigation.util import update_screen
+from navigation_py.util import update_screen
 from std_msgs.msg import Float64MultiArray
 import numpy as np
+import random
 
 
 
@@ -14,7 +15,7 @@ class DroneNode(Node):
 
         #define the target and drone points
         self.target_pos = np.array([346.41, 200])
-        self.current_pos = np.array([0,0])
+        self.current_pos = np.array([0.0,0.0])
 
         #defines the publishers for these points
         self.pos_publisher = self.create_publisher(Float64MultiArray, 'currentpos', 10)
@@ -29,18 +30,25 @@ class DroneNode(Node):
             'measuredvel',
             self.update_position,
             10)
+        
+        self.success = False
 
+    def run_wind(self):
+        self.current_pos[0] = (max(0, round(self.current_pos[0]+random.uniform(-1.99,1.99),2)))
+        self.current_pos[1] = (max(0, round(self.current_pos[1]+random.uniform(-1.99,2.0),2)))
 
     def timer_callback(self):
+        self.run_wind()
         #stores info into sendable objects
         pos_msg = Float64MultiArray()
         pos_msg.data = [float(self.current_pos[0]), float(self.current_pos[1])]
         targ_msg = Float64MultiArray()
         targ_msg.data = [float(self.target_pos[0]), float(self.target_pos[1])]
 
+        if self.success == False:
         #publishes the data
-        self.pos_publisher.publish(pos_msg)
-        self.target_publisher.publish(targ_msg)
+            self.pos_publisher.publish(pos_msg)
+            self.target_publisher.publish(targ_msg)
 
     def update_position(self, msg):
         # round to prevent impossible to align float precision
@@ -65,5 +73,15 @@ class DroneNode(Node):
             self.get_logger().info(
                 "Arrived at destination!"
             )
-        update_screen(x_pos, y_pos)
+        #update_screen(x_pos, y_pos)
         return
+    
+def main(args=None):
+    rclpy.init()
+
+    drone_node = DroneNode()
+
+    rclpy.spin(drone_node)
+
+    drone_node.destroy_node()
+    rclpy.shutdown()

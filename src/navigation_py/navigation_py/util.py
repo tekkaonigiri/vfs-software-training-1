@@ -16,6 +16,7 @@ CIRCLERADIUS = int(SCREENSIZE * .4)
 
 """
 import curses
+import numpy as np
 
 screen = curses.initscr()
 
