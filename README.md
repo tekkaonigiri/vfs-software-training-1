@@ -95,6 +95,7 @@ Your final structure will look like this:
 ## What you need to do
 Create the [node](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html). Have it subscribe to both the `/targetpos` and `/currentpos` topics. Then have it publish the desired velocity.
 Your final solution will look like this:
+
 [Screencast from 11-18-2025 12:20:06 PM.webm](https://github.com/user-attachments/assets/5dc288af-68da-4b79-a13e-0c320614963f)
 
 ### When complete
